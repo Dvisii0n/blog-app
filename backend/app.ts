@@ -1,23 +1,23 @@
 import express from 'express'
-import type { NextFunction, Request, Response } from 'express'
+import passport from 'passport'
+import postRouter from './routes/postRouter'
+import authRouter from './routes/authRouter'
+import cors from 'cors'
+import { default404Handler, default500Handler } from './middleware/errorHandlers'
+import strategyJWT from './config/passport'
 
 const app = express()
 const PORT = 3000
 
+app.use(cors())
 app.use(express.urlencoded())
+passport.use(strategyJWT)
 
-app.get("/", (req: Request, res: Response) => {
-    res.json('Hello world')
-})
+app.use('/api/auth', authRouter)
+app.use('/api/posts', postRouter)
 
-app.use((req: Request, res: Response) => {
-    res.status(404).send('404 Not Found')
-})
-
-app.use((err: Error, req: Request, res: Response, next:NextFunction) => {
-    console.error(err)
-    res.status(500).send('500 Server Error')
-})
+app.use(default404Handler)
+app.use(default500Handler)
 
 app.listen(PORT || 3000, (err) => {
     if (err) throw err

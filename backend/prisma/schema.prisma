@@ -12,6 +12,11 @@ enum Role {
   AUTHOR
 }
 
+enum PublicationStatus {
+  PUBLISHED
+  UNPUBLISHED
+}
+
 model User {
   id String  @id @default(uuid(7))
   username String @unique
@@ -29,7 +34,7 @@ model Post {
   author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String 
   comments Comment[]
-  published Boolean @default(false)
+  publicationStatus PublicationStatus @default(UNPUBLISHED)
   createdAt DateTime @default(now())
 }
 

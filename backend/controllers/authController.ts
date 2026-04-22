@@ -1,48 +1,55 @@
-import type { Request, Response, NextFunction } from "express"
-import 'dotenv/config'
-import {prisma} from '../lib/prisma'
-import bcrypt from "bcryptjs"
-import jwt from 'jsonwebtoken'
+import type { Request, Response, NextFunction } from "express";
+import "dotenv/config";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import userRepository from "../repositories/userRepository";
+import { User } from "../generated/prisma/client";
 
-const JWT_EXPIRES_IN = '24h'
+const JWT_EXPIRES_IN = "24h";
 
 async function signUp(req: Request, res: Response, next: NextFunction) {
-    try {
-        const {username, email, password} = req.body
-        const passwordHash = await bcrypt.hash(password, 10)
-        await prisma.user.create({data: {username: username, email: email, password: passwordHash}})
-        res.status(200).json('created user')
-        return
-    } catch (err) {
-        next(err)
-    }
+	try {
+		const signUpData = req.body;
+		const passwordHash: string = await bcrypt.hash(signUpData.password, 10);
+		await userRepository.createUser(
+			signUpData.username,
+			signUpData.email,
+			passwordHash,
+		);
+		res.status(200).json("created user");
+		return;
+	} catch (err) {
+		next(err);
+	}
 }
 
-async function login(  req: Request, res: Response, next: NextFunction) {
-    try {
-        const {username, password} = req.body
-        const user = await prisma.user.findUnique({where: {username: username}})
-        const SECRET = `${process.env.JWT_SECRET}`
+async function login(req: Request, res: Response, next: NextFunction) {
+	try {
+		const loginData = req.body;
 
-        if (!user) {
-            res.status(400).send('Invalid user or password')
-            return
-        }
+		const SECRET = process.env.JWT_SECRET as string;
+		const user: User | null = await userRepository.getUser(loginData.username);
 
-        const match = await bcrypt.compare(password, user.password)
+		if (!user) {
+			res.status(401).send("Invalid user");
+			return;
+		}
 
-        if (!match) {
-            res.status(400).send('Invalid user or password')
-            return
-        }
+		const match = await bcrypt.compare(loginData.password, user.password);
 
-        const token = jwt.sign({user:user}, SECRET, {expiresIn: JWT_EXPIRES_IN})
-        res.json({token})
-        return
+		if (!match) {
+			res.status(401).send("Invalid password");
+			return;
+		}
 
-    } catch (err) {
-        next(err)
-    }
+		const token = jwt.sign({ user: user }, SECRET, {
+			expiresIn: JWT_EXPIRES_IN,
+		});
+		res.json({ token });
+		return;
+	} catch (err) {
+		next(err);
+	}
 }
 
-export default {signUp, login}
+export default { signUp, login };

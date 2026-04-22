@@ -1,10 +1,10 @@
 import { Router } from "express";
 import postController from "../controllers/postController";
-import passport from "passport";
+import { authUser } from "../middleware/authMiddleware";
 
 const postsRouter: Router = Router();
 
-postsRouter.use(passport.authenticate("jwt", { session: false }));
+postsRouter.use(authUser);
 
 //posts/
 postsRouter.get("/", postController.getPosts);

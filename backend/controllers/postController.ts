@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { prisma } from "../lib/prisma";
+import postsRepository from "../repositories/postsRepository";
 
 async function getPosts(
 	req: Request,
@@ -7,7 +7,7 @@ async function getPosts(
 	next: NextFunction,
 ): Promise<void> {
 	try {
-		const posts: Array<Object> = await prisma.post.findMany();
+		const posts = await postsRepository.getPosts();
 		res.json(posts);
 		return;
 	} catch (err) {
@@ -28,9 +28,7 @@ async function createPost(
 
 		const userId: string = req.user.id;
 		const { title, body } = req.body;
-		await prisma.post.create({
-			data: { title: title, body: body, authorId: userId },
-		});
+		await postsRepository.createPost(title, body, userId);
 		res.status(201).json("POST CREATED");
 		return;
 	} catch (err) {
@@ -45,9 +43,11 @@ async function getPost(
 ): Promise<void> {
 	try {
 		const postId: string = req.params.postId as string;
-		const post = await prisma.post.findUnique({
-			where: { id: postId },
-		});
+		const post = await postsRepository.getPost(postId);
+		if (!post) {
+			res.status(404).json("The specified post doesn't exist");
+			return;
+		}
 		res.json(post);
 	} catch (err) {
 		next(err);
@@ -61,12 +61,11 @@ async function updatePost(
 ): Promise<void> {
 	try {
 		const postId: string = req.params.postId as string;
+		const userId: string = req.user?.id as string;
 		const newData: Object = req.body;
-		await prisma.post.update({
-			data: newData,
-			where: { id: postId },
-		});
+		await postsRepository.updatePost(postId, newData, userId);
 		res.status(201).json("POST UPDATED");
+		return;
 	} catch (err) {
 		next(err);
 	}
@@ -79,9 +78,8 @@ async function deletePost(
 ): Promise<void> {
 	try {
 		const postId: string = req.params.postId as string;
-		await prisma.post.delete({
-			where: { id: postId },
-		});
+		const userId: string = req.user?.id as string;
+		await postsRepository.deletePost(postId, userId);
 		res.json("POST DELETED");
 	} catch (err) {
 		next(err);

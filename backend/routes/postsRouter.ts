@@ -1,10 +1,12 @@
 import { Router } from "express";
 import postController from "../controllers/postController";
+import commentsRouter from "./commentsRouter";
 import { authUser } from "../middleware/authMiddleware";
 
 const postsRouter: Router = Router();
 
 postsRouter.use(authUser);
+postsRouter.use("/:postId/comments", commentsRouter);
 
 //posts/
 postsRouter.get("/", postController.getPosts);

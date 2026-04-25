@@ -21,12 +21,12 @@ async function createPost(
 	next: NextFunction,
 ): Promise<void> {
 	try {
-		if (!req.user) {
-			res.status(401).json("Unauthorized");
+		const role: string = req.user?.role as string;
+		if (role !== "ADMIN" && role !== "AUTHOR") {
+			res.status(403).json("Cannot post if you're not an author or an admin");
 			return;
 		}
-
-		const userId: string = req.user.id;
+		const userId: string = req.user?.id as string;
 		const { title, body } = req.body;
 		await postsRepository.createPost(title, body, userId);
 		res.status(201).json("POST CREATED");

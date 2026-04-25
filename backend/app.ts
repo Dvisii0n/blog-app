@@ -9,6 +9,7 @@ import {
 	default500Handler,
 } from "./middleware/errorHandlers";
 import strategyJWT from "./config/passport";
+import userRouter from "./routes/userRouter";
 
 const PORT: string = process.env.PORT as string;
 
@@ -21,6 +22,7 @@ passport.use(strategyJWT);
 
 app.use(`${baseRoute}/auth`, authRouter);
 app.use(`${baseRoute}/posts`, postsRouter);
+app.use(`${baseRoute}/users`, userRouter);
 
 app.use(default404Handler);
 app.use(default500Handler);

@@ -42,7 +42,14 @@ async function login(req: Request, res: Response, next: NextFunction) {
 			return;
 		}
 
-		const token = jwt.sign({ user: user }, SECRET, {
+		const payload = {
+			id: user.id,
+			username: user.username,
+			email: user.email,
+			role: user.role,
+		};
+
+		const token = jwt.sign({ user: payload }, SECRET, {
 			expiresIn: JWT_EXPIRES_IN,
 		});
 		res.json({ token });

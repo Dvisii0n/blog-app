@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import commentsRepository from "../repositories/commentsRepository";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
+import { matchedData } from "express-validator";
 
 async function getPostComments(
 	req: Request,
@@ -8,7 +9,7 @@ async function getPostComments(
 	next: NextFunction,
 ): Promise<void> {
 	try {
-		const postId: string = req.params?.postId as string;
+		const { postId } = matchedData(req);
 		const postComments = await commentsRepository.getComments(postId);
 		res.json(postComments);
 		return;
@@ -24,8 +25,7 @@ async function createComment(
 ): Promise<void> {
 	try {
 		const authorId: string = req.user?.id as string;
-		const postId: string = req.params?.postId as string;
-		const { body } = req.body;
+		const { postId, body } = matchedData(req);
 		await commentsRepository.createComment(body, postId, authorId);
 		res.json(`Successfully created comment on post`);
 		return;
@@ -41,13 +41,18 @@ async function updateComment(
 ): Promise<void> {
 	try {
 		const userId: string = req.user?.id as string;
-		const commentId: string = req.params?.commentId as string;
-		const { body } = req.body;
+		const { commentId, body } = matchedData(req);
 		await commentsRepository.updateComment(commentId, { body: body }, userId);
 
 		res.json(`Successfully updated comment on post`);
 		return;
 	} catch (err) {
+		if (err instanceof PrismaClientKnownRequestError) {
+			if (err.code === "P2025") {
+				res.status(403).json("Can only update own comments");
+				return;
+			}
+		}
 		next(err);
 	}
 }
@@ -59,14 +64,14 @@ async function deleteComment(
 ): Promise<void> {
 	try {
 		const userId: string = req.user?.id as string;
-		const commentId: string = req.params?.commentId as string;
+		const { commentId } = matchedData(req);
 		await commentsRepository.deleteComment(commentId, userId);
 		res.json(`Successfully deleted comment on post`);
 		return;
 	} catch (err) {
 		if (err instanceof PrismaClientKnownRequestError) {
 			if (err.code === "P2025") {
-				res.status(403).json("Can only delete comments posted by the user");
+				res.status(403).json("Can only delete comments owned by the user");
 				return;
 			}
 		}

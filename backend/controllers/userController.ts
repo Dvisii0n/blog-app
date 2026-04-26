@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import userRepository from "../repositories/userRepository";
 import { PrismaClientKnownRequestError } from "../generated/prisma/internal/prismaNamespace";
+import { matchedData } from "express-validator";
 
 async function updateUsername(
 	req: Request,
@@ -8,21 +9,20 @@ async function updateUsername(
 	next: NextFunction,
 ): Promise<void> {
 	try {
-		const userId: string = req.params.userId as string;
+		const data = matchedData(req);
 		const reqUserId: string = req.user?.id as string;
-		const newUsername: string = req.body.username;
-		const newData: Object = { username: newUsername };
+		const newData: Object = { username: data.username };
 		const updateUserTx = async () => {
 			try {
 				if (req.user?.role === "ADMIN") {
-					await userRepository.updateUserAsAdmin(userId, newData);
+					await userRepository.updateUserAsAdmin(data.userId, newData);
 					return {
 						txDone: true,
 						msg: "Succesfully updated user as admin",
 						status: 200,
 					};
 				} else {
-					await userRepository.updateOwnUser(userId, reqUserId, newData);
+					await userRepository.updateOwnUser(data.userId, reqUserId, newData);
 					return {
 						txDone: true,
 						msg: "Successfully updated own user",
@@ -35,7 +35,7 @@ async function updateUsername(
 					if (err.code === "P2025") {
 						return {
 							txDone: false,
-							msg: "Update operation failed: Tried to update user without permission, you can only update your own user, or any user if you're an admin",
+							msg: "Update operation failed: Tried to update user without permission or user doesn't exists",
 							status: 403,
 						};
 					}

@@ -19,6 +19,14 @@ async function getUser(username: string): Promise<User | null> {
 	return user;
 }
 
+async function getUserByEmail(email: string): Promise<User | null> {
+	const user: User | null = await prisma.user.findUnique({
+		where: { email: email },
+	});
+
+	return user;
+}
+
 async function getUsers(): Promise<Array<Object>> {
 	const users: Array<Object> = await prisma.user.findMany();
 	return users;
@@ -53,6 +61,7 @@ async function updateUserAsAdmin(
 export default {
 	createUser,
 	getUser,
+	getUserByEmail,
 	updateOwnUser,
 	updateUserAsAdmin,
 	getUsers,

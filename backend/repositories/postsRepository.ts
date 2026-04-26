@@ -1,4 +1,4 @@
-import type { Post } from "../generated/prisma/client";
+import type { Post, PublicationStatus } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 
 async function getPosts(): Promise<Array<Post>> {
@@ -9,10 +9,16 @@ async function getPosts(): Promise<Array<Post>> {
 async function createPost(
 	title: string,
 	body: string,
+	publicationStatus: PublicationStatus,
 	userId: string,
 ): Promise<void> {
 	await prisma.post.create({
-		data: { title: title, body: body, authorId: userId },
+		data: {
+			title: title,
+			body: body,
+			publicationStatus: publicationStatus,
+			authorId: userId,
+		},
 	});
 }
 

@@ -2,17 +2,27 @@ import { Router } from "express";
 import postController from "../controllers/postController";
 import commentsRouter from "./commentsRouter";
 import { authUser } from "../middleware/authMiddleware";
+import {
+	validateCreatePost,
+	validateDeletePost,
+	validateGetPost,
+	validateUpdatePost,
+} from "../validators/postValidators";
 
 const postsRouter: Router = Router();
 
-postsRouter.use(authUser);
+postsRouter.get("/", postController.getPosts);
+
 postsRouter.use("/:postId/comments", commentsRouter);
 
-//posts/
-postsRouter.get("/", postController.getPosts);
-postsRouter.get("/:postId", postController.getPost);
-postsRouter.post("/", postController.createPost);
-postsRouter.put("/:postId", postController.updatePost);
-postsRouter.delete("/:postId", postController.deletePost);
+postsRouter.use(authUser);
+
+postsRouter.get("/:postId", validateGetPost, postController.getPost);
+
+postsRouter.post("/", validateCreatePost, postController.createPost);
+
+postsRouter.put("/:postId", validateUpdatePost, postController.updatePost);
+
+postsRouter.delete("/:postId", validateDeletePost, postController.deletePost);
 
 export default postsRouter;

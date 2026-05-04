@@ -2,13 +2,16 @@ import type { Post, PublicationStatus } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 
 async function getPosts(): Promise<Array<Post>> {
-	const posts: Array<Post> = await prisma.post.findMany();
+	const posts: Array<Post> = await prisma.post.findMany({
+		include: { author: { select: { username: true } } },
+	});
 	return posts;
 }
 
 async function createPost(
 	title: string,
 	body: string,
+	description: string,
 	publicationStatus: PublicationStatus,
 	userId: string,
 ): Promise<void> {
@@ -16,6 +19,7 @@ async function createPost(
 		data: {
 			title: title,
 			body: body,
+			description: description,
 			publicationStatus: publicationStatus,
 			authorId: userId,
 		},

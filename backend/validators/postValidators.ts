@@ -7,6 +7,7 @@ const postFields = {
 	userId: "userId",
 	title: "title",
 	body: "body",
+	description: "description",
 	publicationStatus: "publicationStatus",
 };
 
@@ -46,6 +47,18 @@ const postValidators = {
 		.withMessage(`${postFields.body} ${errorMsg.minLength} 1 character`)
 		.isLength({ max: 1000 })
 		.withMessage(`${postFields.body} ${errorMsg.maxLength} 1000 characters`),
+	validateDescrpition: body(postFields.description)
+		.exists()
+		.trim()
+		.isString()
+		.notEmpty()
+		.withMessage(`${postFields.description} ${errorMsg.exists}`)
+		.isLength({ min: 1 })
+		.withMessage(`${postFields.description} ${errorMsg.minLength} 1 character`)
+		.isLength({ max: 100 })
+		.withMessage(
+			`${postFields.description} ${errorMsg.maxLength} 1000 characters`,
+		),
 
 	validatePublicationStatus: body(postFields.publicationStatus)
 		.exists()
@@ -74,6 +87,7 @@ const validateDeletePost = [
 const validateCreatePost = [
 	postValidators.validateTitle,
 	postValidators.validateBody,
+	postValidators.validateDescrpition,
 	postValidators.validatePublicationStatus,
 	validationErrorsHandler,
 ];

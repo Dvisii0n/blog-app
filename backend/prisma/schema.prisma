@@ -31,7 +31,9 @@ model User {
 model Post {
   id String @id @default(uuid(7))
   title String
+  imageURL String @default("/images/placeholder.jpg")
   body String
+  description String @default("lorem ipsum")
   author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId String 
   comments Comment[]

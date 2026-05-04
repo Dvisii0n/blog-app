@@ -28,8 +28,14 @@ async function createPost(
 			return;
 		}
 		const userId: string = req.user?.id as string;
-		const { title, body, publicationStatus } = matchedData(req);
-		await postsRepository.createPost(title, body, publicationStatus, userId);
+		const { title, body, description, publicationStatus } = matchedData(req);
+		await postsRepository.createPost(
+			title,
+			body,
+			description,
+			publicationStatus,
+			userId,
+		);
 		res.status(201).json("POST CREATED");
 		return;
 	} catch (err) {

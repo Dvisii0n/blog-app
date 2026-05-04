@@ -1,0 +1,131 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+	--dark-gray: #141313;
+	--header-black: #020101;
+	--primary-white: #ffffff;
+	--secondary-gray: #c4c7c8;
+	--default-font: "Inter", sans-serif;
+	--terciary-gray: rgb(36, 36, 36);
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--dark-gray);
+	font-family: var(--default-font);
+}
+
+button {
+	border: none;
+	font-family: var(--default-font);
+	cursor: pointer;
+}
+
+p {
+	padding: 0;
+	margin: 0;
+}
+
+header {
+	display: flex;
+	padding: 14px 25px;
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--header-black);
+	gap: 8px;
+}
+
+.header-right {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.header-title {
+	color: var(--primary-white);
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.header-btn {
+	padding: 6px 12px;
+	transition: all 200ms ease;
+}
+
+.signup {
+	border-radius: 12px;
+}
+
+.login {
+	background-color: var(--header-black);
+	border-bottom: 2px solid var(--header-black);
+	color: var(--primary-white);
+}
+
+.login:hover {
+	border-color: var(--primary-white);
+}
+
+.header-icon {
+	width: 30px;
+}
+
+.posts-list {
+	display: flex;
+	justify-content: center;
+}
+
+.posts-list-grid {
+	display: grid;
+	width: 700px;
+	gap: 25px;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.post-card {
+	display: flex;
+	flex-direction: column;
+	padding: 12px;
+	gap: 8px;
+	color: var(--primary-white);
+}
+
+.post-p {
+	grid-column: 2/3;
+	font-size: 14px;
+}
+
+.post-p.created-at {
+	font-size: 12px;
+	color: var(--secondary-gray);
+}
+
+.post-p.title {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.post-p.author {
+	border-radius: 8px;
+	max-width: fit-content;
+	padding: 5px;
+	font-size: 12px;
+	text-align: center;
+	background-color: var(--terciary-gray);
+}
+
+.post-btn.read {
+	background-color: var(--dark-gray);
+	color: var(--primary-white);
+	border-bottom: 2px solid var(--terciary-gray);
+	padding: 8px;
+	max-width: fit-content;
+	transition: all 200ms ease;
+}
+
+.post-btn.read:hover {
+	border-color: var(--primary-white);
+}

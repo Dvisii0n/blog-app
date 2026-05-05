@@ -1,7 +1,9 @@
+import { Link } from "react-router";
+
 function Header() {
 	return (
 		<header>
-			<p className="header-title">The Journal</p>
+			<Link to={'/'} className="header-title">The Journal</Link>
 			<div className="header-right">
 				<button className="header-btn login">Log In</button>
 				<button className="header-btn signup">Sign Up</button>

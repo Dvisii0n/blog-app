@@ -1,12 +1,14 @@
 import './styles.css'
 import Header from './components/Header'
-import PostList from './components/PostsList'
+import Footer from './components/Footer'
+import { Outlet } from 'react-router'
 function App() {
 
   return (
     <>
     <Header></Header>
-    <PostList/>
+    <Outlet/>
+    <Footer></Footer>
     </>
   )
 }

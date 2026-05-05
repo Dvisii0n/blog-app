@@ -4,6 +4,9 @@ import { prisma } from "../lib/prisma";
 async function getPosts(): Promise<Array<Post>> {
 	const posts: Array<Post> = await prisma.post.findMany({
 		include: { author: { select: { username: true } } },
+		orderBy: {
+			createdAt: "desc",
+		},
 	});
 	return posts;
 }
@@ -29,6 +32,13 @@ async function createPost(
 async function getPost(postId: string): Promise<Post | null> {
 	const post: Post | null = await prisma.post.findUnique({
 		where: { id: postId },
+		include: {
+			author: {
+				select: {
+					username: true,
+				},
+			},
+		},
 	});
 	return post;
 }

@@ -15,9 +15,9 @@ postsRouter.get("/", postController.getPosts);
 
 postsRouter.use("/:postId/comments", commentsRouter);
 
-postsRouter.use(authUser);
-
 postsRouter.get("/:postId", validateGetPost, postController.getPost);
+
+postsRouter.use(authUser);
 
 postsRouter.post("/", validateCreatePost, postController.createPost);
 

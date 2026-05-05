@@ -1,37 +1,49 @@
 import { useEffect, useState } from "react";
-import PostCard from "./PostCard";
+import { PostCard, PostCardFeatured } from "./PostCard";
 import type { PostData } from "../types/PostTypes";
 
 function PostList() {
-	const apiURL: string = "http://localhost:3000/api/v1";
 	const [posts, setPosts] = useState<Array<PostData>>([]);
+	const [loading, setLoading] = useState<Boolean>(true);
+	const apiURL = import.meta.env.VITE_API_URL;
 
 	useEffect(() => {
-		async function fetchPosts() {
+		const fetchData = async () => {
 			try {
 				const response = await fetch(`${apiURL}/posts`);
 				const result = await response.json();
 				setPosts(result);
 			} catch (error) {
 				throw error;
+			} finally {
+				setLoading(false)
 			}
-		}
-		try {
-			fetchPosts();
-		} catch (error) {
-			throw error;
-		}
+		};
+		fetchData();
 	}, [apiURL]);
-
-	console.log(posts);
 
 	return (
 		<main className="posts-list">
-			<section className="posts-list-grid">
-				{posts.map((postData) => (
-					<PostCard key={postData.id} postData={postData} />
-				))}
+			<section className="posts-list-top">
+				<h2 className="posts-top-h2">Latest Posts</h2>
+				<p className="posts-top-p description">
+					Random ass blog posts written by AI, made this to learn about REST
+				</p>
 			</section>
+			{loading ? (
+				<div className="loading">loading...</div>
+			) : (
+				<>
+					<PostCardFeatured key={posts[0].id} postData={posts[0]} />
+					<section className="posts-list-grid">
+						{posts
+							.filter((post) => post.id !== posts[0].id)
+							.map((postData) => (
+								<PostCard key={postData.id} postData={postData} />
+							))}
+					</section>
+				</>
+			)}
 		</main>
 	);
 }

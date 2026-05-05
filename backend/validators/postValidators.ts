@@ -43,11 +43,11 @@ const postValidators = {
 		.isString()
 		.notEmpty()
 		.withMessage(`${postFields.body} ${errorMsg.exists}`)
-		.isLength({ min: 1 })
-		.withMessage(`${postFields.body} ${errorMsg.minLength} 1 character`)
-		.isLength({ max: 1000 })
-		.withMessage(`${postFields.body} ${errorMsg.maxLength} 1000 characters`),
-	validateDescrpition: body(postFields.description)
+		.isLength({ min: 100 })
+		.withMessage(`${postFields.body} ${errorMsg.minLength} 100 characters`)
+		.isLength({ max: 15000 })
+		.withMessage(`${postFields.body} ${errorMsg.maxLength} 15000 characters`),
+	validateDescription: body(postFields.description)
 		.exists()
 		.trim()
 		.isString()
@@ -55,9 +55,9 @@ const postValidators = {
 		.withMessage(`${postFields.description} ${errorMsg.exists}`)
 		.isLength({ min: 1 })
 		.withMessage(`${postFields.description} ${errorMsg.minLength} 1 character`)
-		.isLength({ max: 100 })
+		.isLength({ max: 200 })
 		.withMessage(
-			`${postFields.description} ${errorMsg.maxLength} 1000 characters`,
+			`${postFields.description} ${errorMsg.maxLength} 200 characters`,
 		),
 
 	validatePublicationStatus: body(postFields.publicationStatus)
@@ -87,7 +87,7 @@ const validateDeletePost = [
 const validateCreatePost = [
 	postValidators.validateTitle,
 	postValidators.validateBody,
-	postValidators.validateDescrpition,
+	postValidators.validateDescription,
 	postValidators.validatePublicationStatus,
 	validationErrorsHandler,
 ];

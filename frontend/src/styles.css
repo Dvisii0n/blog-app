@@ -11,19 +11,28 @@
 
 body {
 	margin: 0;
-}
-
-#root {
-	margin: 0;
-	display: flex;
-	gap: 32px;
-	flex-direction: column;
 	background-color: var(--dark-gray);
 	font-family: var(--default-font);
 }
 
+#root {
+	display: flex;
+	gap: 32px;
+	flex-direction: column;
+}
+
 main {
 	min-height: 100vh;
+}
+
+.error-page {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.not-found {
+	color: var(--primary-white);
 }
 
 button {
@@ -233,4 +242,13 @@ footer {
 	padding-bottom: 24px;
 	margin-bottom: 24px;
 	border-bottom: 1px solid var(--terciary-gray);
+}
+
+.signup-form {
+	display: flex;
+	flex-direction: column;
+	color: var(--primary-white);
+	gap: 12px;
+	max-width: 300px;
+	padding: 12px;
 }

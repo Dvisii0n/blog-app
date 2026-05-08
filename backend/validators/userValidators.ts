@@ -26,7 +26,6 @@ const userValidators = {
 	validateEmail: body(userFields.email)
 		.exists()
 		.trim()
-		.isString()
 		.notEmpty()
 		.withMessage(`${userFields.email} ${errorMsg.exists}`)
 		.isEmail()

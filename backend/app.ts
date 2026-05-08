@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import type { Application } from "express";
 import passport from "passport";
 import postsRouter from "./routes/postsRouter";
@@ -17,6 +17,7 @@ const app: Application = express();
 const baseRoute: string = "/api/v1";
 
 app.use(cors());
+app.use(json());
 app.use(express.urlencoded());
 passport.use(strategyJWT);
 

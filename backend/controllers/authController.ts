@@ -17,12 +17,12 @@ async function signUp(req: Request, res: Response, next: NextFunction) {
 		]);
 
 		if (usernameTaken) {
-			res.status(404).json("Username already taken");
+			res.status(404).json([{ msg: "Username already taken" }]);
 			return;
 		}
 
 		if (emailTaken) {
-			res.status(404).json("Email already taken");
+			res.status(404).json([{ msg: "Email already taken" }]);
 			return;
 		}
 		const passwordHash: string = await bcrypt.hash(signUpData.password, 10);
@@ -31,7 +31,7 @@ async function signUp(req: Request, res: Response, next: NextFunction) {
 			signUpData.email,
 			passwordHash,
 		);
-		res.status(200).json("created user");
+		res.status(200).send([{ msg: "SIGNUP_SUCCESS" }]);
 		return;
 	} catch (err) {
 		next(err);

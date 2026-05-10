@@ -1,5 +1,5 @@
 import App from "./App"
-import NotFound from "./components/404"
+import ServerError from "./components/500"
 import PostList from "./components/PostsList"
 import Post from "./components/Post"
 import Signup from "./components/Signup"
@@ -7,7 +7,7 @@ import Signup from "./components/Signup"
 export const routes = [{
     path: "/",
     element: <App/>,
-    errorElement: <NotFound />,
+    errorElement: <ServerError />,
     children: [
       {index:true, element: <PostList/>},
       {path:'post/:postId', element: <Post/>},

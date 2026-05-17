@@ -39,7 +39,6 @@ async function signUp(req: Request, res: Response, next: NextFunction) {
 		next(err);
 	}
 }
-
 async function login(req: Request, res: Response, next: NextFunction) {
 	try {
 		const loginData = req.body;
@@ -48,7 +47,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
 		const user: User | null = await userRepository.getUser(loginData.username);
 
 		if (!user) {
-			res.status(401).json({ msg: "Invalid username" });
+			res.status(401).json([{ msg: "Invalid username", path: "username" }]);
 			return;
 		}
 
@@ -58,14 +57,21 @@ async function login(req: Request, res: Response, next: NextFunction) {
 		);
 
 		if (!match) {
-			res.status(401).json({ msg: "Invalid password" });
+			res.status(401).json([{ msg: "Invalid password", path: "username" }]);
 			return;
 		}
 
 		const token = jwt.sign({ user: user }, SECRET, {
 			expiresIn: JWT_EXPIRES_IN,
 		});
-		res.json({ msg: "login successful", token });
+		res.json([
+			{
+				msg: "LOGIN_SUCCESS",
+				token,
+				username: loginData.username,
+				role: user.role,
+			},
+		]);
 		return;
 	} catch (err) {
 		next(err);

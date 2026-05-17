@@ -99,7 +99,7 @@ function Signup() {
 				</button>
 				<section className="form-notice">
 					<span className="form-notice-sp">Already have an account? </span>
-					<Link className="form-anchor" to={""}>
+					<Link className="form-anchor" to={"/login"}>
 						Log In
 					</Link>
 				</section>

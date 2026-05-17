@@ -99,18 +99,24 @@ footer {
 	border-radius: 12px;
 }
 
-.login {
+.login,
+.logout {
 	background-color: var(--header-black);
 	border-bottom: 2px solid var(--header-black);
 	color: var(--primary-white);
 }
 
-.login:hover {
+.login:hover,
+.logout:hover {
 	border-color: var(--primary-white);
 }
 
 .header-icon {
 	width: 30px;
+}
+
+.username {
+	color: var(--primary-white);
 }
 
 .posts-list {

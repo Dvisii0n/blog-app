@@ -15,6 +15,7 @@ function App() {
 	function logout() {
 		localStorage.removeItem('token')
 		localStorage.removeItem('username')
+		localStorage.removeItem('role')
 		setIsLoggedIn(false)
 	}
 

@@ -8,7 +8,8 @@ interface HeaderProps {
 
 function Header({ isLoggedIn, logout }: HeaderProps) {
 	const navigate = useNavigate();
-	const username = localStorage.getItem('username')
+	const username = localStorage.getItem("username");
+	const role = localStorage.getItem("role");
 	return (
 		<header>
 			<Link to={"/"} className="header-title">
@@ -35,7 +36,11 @@ function Header({ isLoggedIn, logout }: HeaderProps) {
 						<button onClick={logout} className="header-btn logout">
 							Log Out
 						</button>
-						<button className="header-btn create-post">Create Post</button>
+						{role === "AUTHOR" || role === "ADMIN" ? (
+							<button className="header-btn create-post">Create Post</button>
+						) : (
+							<></>
+						)}
 
 						<img src="/svg/user.svg" alt="" className="header-icon user" />
 						<p className="username">{username}</p>
